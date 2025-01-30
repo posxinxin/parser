@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Data Parser</title>
+    <style>
+        /* Styles for the page */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #1c1c1c;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        h1 {
+            color: #4CAF50;
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #ccc;
+        }
+
+        textarea {
+            width: 90%;
+            max-width: 600px;
+            min-width: 600px;
+            height: 200px;
+            padding: 10px;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+            resize: none;
+            font-size: 1rem;
+            color: #fff;
+            background-color: #333;
+            position: relative;
+            animation: lightning-strike 1s infinite alternate;
+            display: block;
+            margin: 0 auto;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, transform 0.2s;
+            margin-top: 15px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
+        }
+
+        .encoded-data {
+            background-color: #333;
+            border: 2px solid #4CAF50;
+            padding: 20px;
+            margin-top: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            animation: lightning-strike 1s infinite alternate, popup 0.3s ease-out forwards;
+            color: #fff;
+            display: none;
+            text-align: center;
+        }
+
+        .encoded-data h2 {
+            color: #4CAF50;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        pre {
+            background-color: #222;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            color: #fff;
+            text-align: center;
+        }
+
+        /* Lightning Strike Animation */
+        @keyframes lightning-strike {
+            0% {
+                box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff;
+            }
+            25% {
+                box-shadow: 0 0 15px #0ff, 0 0 30px #0ff, 0 0 50px #0ff;
+            }
+            50% {
+                box-shadow: 0 0 20px #0ff, 0 0 40px #0ff, 0 0 60px #0ff;
+            }
+            75% {
+                box-shadow: 0 0 30px #0ff, 0 0 50px #0ff, 0 0 80px #0ff;
+            }
+            100% {
+                box-shadow: 0 0 40px #fff, 0 0 70px #fff, 0 0 100px #fff;
+            }
+        }
+
+        /* Popup animation for encoded data */
+        @keyframes popup {
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+                box-shadow: 0 0 20px rgba(0, 255, 255, 0.7), 0 0 40px rgba(0, 255, 255, 0.7);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+                box-shadow: 0 0 20px rgba(0, 255, 255, 0.7), 0 0 40px rgba(0, 255, 255, 0.7);
+            }
+        }
+
+        /* Error Popup */
+        .error-popup {
+            background-color: #FF4D4D;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            max-width: 90%;
+            width: auto;
+            white-space: nowrap; /* Prevents wrapping of text */
+            text-align: center;
+            font-size: 0.9rem;
+            display: none;
+            animation: popup 0.5s ease-out forwards;
+        }
+
+        /* Success Popup */
+        .success-popup {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            max-width: 90%;
+            width: auto;
+            white-space: nowrap; /* Prevents wrapping of text */
+            text-align: center;
+            font-size: 0.9rem;
+            display: none;
+            animation: popup 0.5s ease-out forwards;
+        }
+
+        /* Footer with animations */
+        .footer {
+            margin-top: 50px;
+            font-size: 1rem;
+            color: #777;
+            position: relative;
+            width: 100%;
+            text-align: center;
+            overflow: hidden;
+            padding: 10px 0;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .created-by {
+            margin-bottom: 5px;
+            font-size: 1.5rem;
+            color: #4CAF50;
+            animation: glowingText 2s infinite alternate;
+            font-weight: bold;
+        }
+
+        .moving-text {
+            position: absolute;
+            white-space: nowrap;
+            animation: moveText 5s linear infinite;
+            font-size: 1.5rem;
+            color: #4CAF50;
+            font-weight: bold;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes glowingText {
+            0% {
+                color: #4CAF50;
+                text-shadow: 0 0 5px #4CAF50, 0 0 10px #4CAF50, 0 0 20px #4CAF50;
+            }
+            25% {
+                color: #FF5733;
+                text-shadow: 0 0 5px #FF5733, 0 0 10px #FF5733, 0 0 20px #FF5733;
+            }
+            50% {
+                color: #FFD700;
+                text-shadow: 0 0 5px #FFD700, 0 0 10px #FFD700, 0 0 20px #FFD700;
+            }
+            75% {
+                color: #FF1493;
+                text-shadow: 0 0 5px #FF1493, 0 0 10px #FF1493, 0 0 20px #FF1493;
+            }
+            100% {
+                color: #4CAF50;
+                text-shadow: 0 0 5px #4CAF50, 0 0 10px #4CAF50, 0 0 20px #4CAF50;
+            }
+        }
+
+        @keyframes moveText {
+            0% {
+                left: 100%;
+            }
+            50% {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            100% {
+                left: -100%;
+            }
+        }
+
+        /* Animated Background (Bouncing Balls and Bubbles) */
+        @keyframes bounce {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-50px); }
+            100% { transform: translateY(0); }
+        }
+
+        @keyframes floatBubble {
+            0% { transform: translateY(100vh); opacity: 1; }
+            100% { transform: translateY(-10vh); opacity: 0; }
+        }
+
+        /* Create 100 bouncing balls and bubbles */
+        .bouncing-ball,
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation-duration: 4s;
+            animation-timing-function: ease-in-out;
+            animation-iteration-count: infinite;
+        }
+
+        .bouncing-ball {
+            width: 30px;
+            height: 30px;
+            background-color: #ff5722;
+            animation-name: bounce;
+        }
+
+        .bubble {
+            width: 20px;
+            height: 20px;
+            background-color: rgba(255, 255, 255, 0.6);
+            animation-name: floatBubble;
+        }
+
+        /* Additional styles for bouncing balls and bubbles */
+        .bouncing-ball:nth-child(even) {
+            background-color: #8bc34a;
+        }
+
+        .bubble:nth-child(odd) {
+            background-color: rgba(0, 188, 212, 0.6);
+        }
+
+        /* Media Queries for responsiveness */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            textarea {
+                width: 95%;
+            }
+
+            .footer-content {
+                font-size: 1rem;
+            }
+
+            .error-popup, .success-popup {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            textarea {
+                width: 95%;
+                height: 150px;
+            }
+
+            input[type="submit"] {
+                font-size: 1rem;
+            }
+
+            .footer {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Form Data Parser</h1>
+
+    <form id="form" onsubmit="return parseFormData(event)">
+        <label for="formData">Paste your raw form data:</label><br><br>
+        <textarea name="formData" id="formData" placeholder="Paste your raw form data here... (including boundaries)"></textarea><br><br>
+        <input type="submit" value="Parse Data">
+    </form>
+
+    <div class="encoded-data" id="encodedData">
+        <h2>Encoded Form Data:</h2>
+        <pre id="encodedOutput"></pre>
+    </div>
+
+    <!-- Error Popup for invalid form data -->
+    <div class="error-popup" id="errorPopup">
+        Invalid form data!
+    </div>
+
+    <!-- Success Popup for successful parsing -->
+    <div class="success-popup" id="successPopup">
+        Data parsed successfully!
+    </div>
+
+    <div class="footer">
+        <div class="footer-content">
+            <span class="created-by">Created by: X I N</span>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="footer-content">
+            <span class="moving-text">Telegram: https://t.me/posxinxin</span>
+        </div>
+    </div>
+
+    <!-- Animated Background Elements -->
+    <div id="background-animations"></div>
+
+    <script>
+        // Function to generate 100 bouncing balls and bubbles
+        function generateAnimations() {
+            const container = document.getElementById('background-animations');
+            for (let i = 0; i < 100; i++) {
+                const randomPositionX = Math.random() * window.innerWidth;
+                const randomPositionY = Math.random() * window.innerHeight;
+                const animationDelay = Math.random() * 3 + 's'; // Random delay
+
+                const isBall = Math.random() < 0.5; // 50% chance for a ball
+                const element = document.createElement('div');
+                element.classList.add(isBall ? 'bouncing-ball' : 'bubble');
+                element.style.left = randomPositionX + 'px';
+                element.style.top = randomPositionY + 'px';
+                element.style.animationDelay = animationDelay;
+                container.appendChild(element);
+            }
+        }
+
+        // Call the function to generate animations on page load
+        generateAnimations();
+
+        // Function to parse form data
+        function parseFormData(event) {
+            event.preventDefault();
+
+            const rawData = document.getElementById("formData").value;
+
+            // Validate form data
+            if (!isValidFormData(rawData)) {
+                showErrorPopup();
+                return false;
+            }
+
+            const parsedData = parseRawData(rawData);
+
+            const urlEncodedData = encodeFormData(parsedData);
+
+            document.getElementById("encodedOutput").textContent = urlEncodedData;
+            document.getElementById("encodedData").style.display = 'block';
+
+            showSuccessPopup();
+        }
+
+        // Function to validate form data structure
+        function isValidFormData(data) {
+            const requiredPattern = /Content-Disposition: form-data; name="([^"]+)"/;
+            return requiredPattern.test(data);
+        }
+
+        function parseRawData(data) {
+            const entries = {};
+            const cleanedData = data.replace(/--[\w\d-]+\s+/g, '').trim();
+            const lines = cleanedData.split("\n").map(line => line.trim()).filter(line => line.length > 0);
+
+            let fieldName = '';
+            let fieldValue = '';
+            let isName = true;
+
+            for (const line of lines) {
+                if (line.startsWith('Content-Disposition: form-data; name="')) {
+                    const nameMatch = line.match(/name="([^"]+)"/);
+                    if (nameMatch) {
+                        fieldName = nameMatch[1];
+                        isName = false;
+                    }
+                } else if (!isName) {
+                    fieldValue = line.trim();
+                    entries[fieldName] = fieldValue;
+                    isName = true;
+                }
+            }
+
+            return entries;
+        }
+
+        function encodeFormData(data) {
+            const encodedData = [];
+            for (const key in data) {
+                if (data.hasOwnProperty(key)) {
+                    encodedData.push(encodeURIComponent(key) + '=' + encodeURIComponent(data[key]));
+                }
+            }
+            return encodedData.join('&');
+        }
+
+        // Function to show the error popup
+        function showErrorPopup() {
+            document.getElementById("errorPopup").style.display = 'block';
+            setTimeout(() => document.getElementById("errorPopup").style.display = 'none', 3000);
+        }
+
+        // Function to show the success popup
+        function showSuccessPopup() {
+            document.getElementById("successPopup").style.display = 'block';
+            setTimeout(() => document.getElementById("successPopup").style.display = 'none', 3000);
+        }
+    </script>
+
+</body>
+</html>
