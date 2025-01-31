@@ -52,6 +52,32 @@
             margin: 0 auto;
         }
 
+        /* New Content-Type box for x-www-form-urlencoded */
+        .content-type-box {
+            width: 90%;
+            max-width: 600px;
+            min-width: 600px;
+            padding: 10px;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+            background-color: #333;
+            color: #fff;
+            font-family: 'Arial', sans-serif; /* Same font as the text area */
+            font-size: 1rem;
+            text-align: center;
+            margin-top: 20px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .content-type-box p {
+            font-size: 1rem;
+            margin: 0;
+            padding: 10px;
+            background-color: #444;
+            border-radius: 5px;
+        }
+
         input[type="submit"] {
             background-color: #4CAF50;
             color: white;
@@ -342,6 +368,13 @@
     <form id="form" onsubmit="return parseFormData(event)">
         <label for="formData">Paste your raw form data:</label><br><br>
         <textarea name="formData" id="formData" placeholder="Paste your raw form data here... (including boundaries)"></textarea><br><br>
+
+        <!-- New Content-Type box -->
+        <div class="content-type-box">
+            <p>Content-Type: application/x-www-form-urlencoded</p>
+            <p>Content-Type: application/x-www-form-urlencoded; charset=UTF-8</p>
+        </div>
+
         <input type="submit" value="Parse Data">
     </form>
 
@@ -372,7 +405,6 @@
         </div>
     </div>
 
-    <!-- Animated Background Elements -->
     <div id="background-animations"></div>
 
     <script>
@@ -382,9 +414,9 @@
             for (let i = 0; i < 100; i++) {
                 const randomPositionX = Math.random() * window.innerWidth;
                 const randomPositionY = Math.random() * window.innerHeight;
-                const animationDelay = Math.random() * 3 + 's'; // Random delay
+                const animationDelay = Math.random() * 3 + 's';
 
-                const isBall = Math.random() < 0.5; // 50% chance for a ball
+                const isBall = Math.random() < 0.5;
                 const element = document.createElement('div');
                 element.classList.add(isBall ? 'bouncing-ball' : 'bubble');
                 element.style.left = randomPositionX + 'px';
@@ -403,7 +435,6 @@
 
             const rawData = document.getElementById("formData").value;
 
-            // Validate form data
             if (!isValidFormData(rawData)) {
                 showErrorPopup();
                 return false;
@@ -419,7 +450,6 @@
             showSuccessPopup();
         }
 
-        // Function to validate form data structure
         function isValidFormData(data) {
             const requiredPattern = /Content-Disposition: form-data; name="([^"]+)"/;
             return requiredPattern.test(data);
@@ -461,13 +491,11 @@
             return encodedData.join('&');
         }
 
-        // Function to show the error popup
         function showErrorPopup() {
             document.getElementById("errorPopup").style.display = 'block';
             setTimeout(() => document.getElementById("errorPopup").style.display = 'none', 3000);
         }
 
-        // Function to show the success popup
         function showSuccessPopup() {
             document.getElementById("successPopup").style.display = 'block';
             setTimeout(() => document.getElementById("successPopup").style.display = 'none', 3000);
