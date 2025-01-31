@@ -22,7 +22,7 @@
         }
 
         h1 {
-            color: #4CAF50;
+            color: #00FF00; /* Green for uniformity */
             text-align: center;
             font-size: 2.5rem;
             margin-bottom: 20px;
@@ -52,7 +52,7 @@
             margin: 0 auto;
         }
 
-        /* New Content-Type box for x-www-form-urlencoded */
+        /* New Content-Type box for x-www-form-urlencoded with glowing animation */
         .content-type-box {
             width: 90%;
             max-width: 600px;
@@ -62,12 +62,13 @@
             border: 2px solid #ddd;
             background-color: #333;
             color: #fff;
-            font-family: 'Arial', sans-serif; /* Same font as the text area */
+            font-family: 'Arial', sans-serif;
             font-size: 1rem;
             text-align: center;
             margin-top: 20px;
             display: block;
             margin: 0 auto;
+            animation: glowingAnimation 1.5s infinite alternate;
         }
 
         .content-type-box p {
@@ -79,7 +80,7 @@
         }
 
         input[type="submit"] {
-            background-color: #4CAF50;
+            background-color: #00FF00; /* Green for uniformity */
             color: white;
             border: none;
             padding: 12px 20px;
@@ -100,7 +101,7 @@
 
         .encoded-data {
             background-color: #333;
-            border: 2px solid #4CAF50;
+            border: 2px solid #00FF00; /* Green for uniformity */
             padding: 20px;
             margin-top: 30px;
             border-radius: 10px;
@@ -114,7 +115,7 @@
         }
 
         .encoded-data h2 {
-            color: #4CAF50;
+            color: #00FF00; /* Green for uniformity */
             font-size: 1.8rem;
             margin-bottom: 15px;
             text-align: center;
@@ -131,19 +132,32 @@
             text-align: center;
         }
 
-        /* Lightning Strike Animation */
+        /* Glowing Animation (Uniform Green) */
+        @keyframes glowingAnimation {
+            0% {
+                box-shadow: 0 0 10px #00FF00, 0 0 20px #00FF00, 0 0 30px #00FF00;
+            }
+            50% {
+                box-shadow: 0 0 20px #00FF00, 0 0 40px #00FF00, 0 0 50px #00FF00;
+            }
+            100% {
+                box-shadow: 0 0 10px #00FF00, 0 0 20px #00FF00, 0 0 30px #00FF00;
+            }
+        }
+
+        /* Lightning Strike Animation (Uniform Green) */
         @keyframes lightning-strike {
             0% {
                 box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff;
             }
             25% {
-                box-shadow: 0 0 15px #0ff, 0 0 30px #0ff, 0 0 50px #0ff;
+                box-shadow: 0 0 15px #00FF00, 0 0 30px #00FF00, 0 0 50px #00FF00;
             }
             50% {
-                box-shadow: 0 0 20px #0ff, 0 0 40px #0ff, 0 0 60px #0ff;
+                box-shadow: 0 0 20px #00FF00, 0 0 40px #00FF00, 0 0 60px #00FF00;
             }
             75% {
-                box-shadow: 0 0 30px #0ff, 0 0 50px #0ff, 0 0 80px #0ff;
+                box-shadow: 0 0 30px #00FF00, 0 0 50px #00FF00, 0 0 80px #00FF00;
             }
             100% {
                 box-shadow: 0 0 40px #fff, 0 0 70px #fff, 0 0 100px #fff;
@@ -155,12 +169,12 @@
             0% {
                 transform: scale(0.5);
                 opacity: 0;
-                box-shadow: 0 0 20px rgba(0, 255, 255, 0.7), 0 0 40px rgba(0, 255, 255, 0.7);
+                box-shadow: 0 0 20px rgba(0, 255, 0, 0.7), 0 0 40px rgba(0, 255, 0, 0.7);
             }
             100% {
                 transform: scale(1);
                 opacity: 1;
-                box-shadow: 0 0 20px rgba(0, 255, 255, 0.7), 0 0 40px rgba(0, 255, 255, 0.7);
+                box-shadow: 0 0 20px rgba(0, 255, 0, 0.7), 0 0 40px rgba(0, 255, 0, 0.7);
             }
         }
 
@@ -176,7 +190,7 @@
             transform: translateX(-50%);
             max-width: 90%;
             width: auto;
-            white-space: nowrap; /* Prevents wrapping of text */
+            white-space: nowrap;
             text-align: center;
             font-size: 0.9rem;
             display: none;
@@ -185,7 +199,7 @@
 
         /* Success Popup */
         .success-popup {
-            background-color: #4CAF50;
+            background-color: #00FF00;
             color: white;
             padding: 10px 20px;
             border-radius: 10px;
@@ -195,7 +209,7 @@
             transform: translateX(-50%);
             max-width: 90%;
             width: auto;
-            white-space: nowrap; /* Prevents wrapping of text */
+            white-space: nowrap;
             text-align: center;
             font-size: 0.9rem;
             display: none;
@@ -225,7 +239,7 @@
         .created-by {
             margin-bottom: 5px;
             font-size: 1.5rem;
-            color: #4CAF50;
+            color: #00FF00; /* Green for uniformity */
             animation: glowingText 2s infinite alternate;
             font-weight: bold;
         }
@@ -235,31 +249,31 @@
             white-space: nowrap;
             animation: moveText 20s linear infinite;
             font-size: 1.5rem;
-            color: #4CAF50;
+            color: #00FF00; /* Green for uniformity */
             font-weight: bold;
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
         }
 
         @keyframes glowingText {
             0% {
-                color: #4CAF50;
-                text-shadow: 0 0 5px #4CAF50, 0 0 10px #4CAF50, 0 0 20px #4CAF50;
+                color: #00FF00;
+                text-shadow: 0 0 5px #00FF00, 0 0 10px #00FF00, 0 0 20px #00FF00;
             }
             25% {
-                color: #FF5733;
-                text-shadow: 0 0 5px #FF5733, 0 0 10px #FF5733, 0 0 20px #FF5733;
+                color: #00FF00;
+                text-shadow: 0 0 5px #00FF00, 0 0 10px #00FF00, 0 0 20px #00FF00;
             }
             50% {
-                color: #FFD700;
-                text-shadow: 0 0 5px #FFD700, 0 0 10px #FFD700, 0 0 20px #FFD700;
+                color: #00FF00;
+                text-shadow: 0 0 5px #00FF00, 0 0 10px #00FF00, 0 0 20px #00FF00;
             }
             75% {
-                color: #FF1493;
-                text-shadow: 0 0 5px #FF1493, 0 0 10px #FF1493, 0 0 20px #FF1493;
+                color: #00FF00;
+                text-shadow: 0 0 5px #00FF00, 0 0 10px #00FF00, 0 0 20px #00FF00;
             }
             100% {
-                color: #4CAF50;
-                text-shadow: 0 0 5px #4CAF50, 0 0 10px #4CAF50, 0 0 20px #4CAF50;
+                color: #00FF00;
+                text-shadow: 0 0 5px #00FF00, 0 0 10px #00FF00, 0 0 20px #00FF00;
             }
         }
 
@@ -302,24 +316,24 @@
         .bouncing-ball {
             width: 30px;
             height: 30px;
-            background-color: #ff5722;
+            background-color: #00FF00; /* Green for uniformity */
             animation-name: bounce;
         }
 
         .bubble {
             width: 20px;
             height: 20px;
-            background-color: rgba(255, 255, 255, 0.6);
+            background-color: rgba(0, 255, 0, 0.6); /* Green for uniformity */
             animation-name: floatBubble;
         }
 
         /* Additional styles for bouncing balls and bubbles */
         .bouncing-ball:nth-child(even) {
-            background-color: #8bc34a;
+            background-color: #00FF00;
         }
 
         .bubble:nth-child(odd) {
-            background-color: rgba(0, 188, 212, 0.6);
+            background-color: rgba(0, 255, 0, 0.6);
         }
 
         /* Media Queries for responsiveness */
@@ -362,61 +376,42 @@
     </style>
 </head>
 <body>
-
     <h1>Form Data Parser</h1>
-
     <form id="form" onsubmit="return parseFormData(event)">
         <label for="formData">Paste your raw form data:</label><br><br>
         <textarea name="formData" id="formData" placeholder="Paste your raw form data here... (including boundaries)"></textarea><br><br>
-
         <!-- New Content-Type box -->
         <div class="content-type-box">
-        <label for="formData">Copy required Content-Type:</label><br><br>
+            <label for="formData">Copy required Content-Type:</label><br><br>
             <p>Content-Type: application/x-www-form-urlencoded</p>
             <p>Content-Type: application/x-www-form-urlencoded; charset=UTF-8</p>
         </div>
-
         <input type="submit" value="Parse Data">
     </form>
-
     <div class="encoded-data" id="encodedData">
         <h2>Encoded Form Data:</h2>
         <pre id="encodedOutput"></pre>
     </div>
-
-    <!-- Error Popup for invalid form data -->
-    <div class="error-popup" id="errorPopup">
-        Invalid form data!
-    </div>
-
-    <!-- Success Popup for successful parsing -->
-    <div class="success-popup" id="successPopup">
-        Data parsed successfully!
-    </div>
-
+    <div class="error-popup" id="errorPopup">Invalid form data!</div>
+    <div class="success-popup" id="successPopup">Data parsed successfully!</div>
     <div class="footer">
         <div class="footer-content">
             <span class="created-by">Created by: X I N</span>
         </div>
     </div>
-
     <div class="footer">
         <div class="footer-content">
             <span class="moving-text">Telegram: https://t.me/posxinxin</span>
         </div>
     </div>
-
     <div id="background-animations"></div>
-
     <script>
-        // Function to generate 100 bouncing balls and bubbles
         function generateAnimations() {
             const container = document.getElementById('background-animations');
             for (let i = 0; i < 100; i++) {
                 const randomPositionX = Math.random() * window.innerWidth;
                 const randomPositionY = Math.random() * window.innerHeight;
                 const animationDelay = Math.random() * 3 + 's';
-
                 const isBall = Math.random() < 0.5;
                 const element = document.createElement('div');
                 element.classList.add(isBall ? 'bouncing-ball' : 'bubble');
@@ -426,11 +421,8 @@
                 container.appendChild(element);
             }
         }
-
-        // Call the function to generate animations on page load
         generateAnimations();
 
-        // Function to parse form data
         function parseFormData(event) {
             event.preventDefault();
 
@@ -478,7 +470,6 @@
                     isName = true;
                 }
             }
-
             return entries;
         }
 
@@ -502,6 +493,5 @@
             setTimeout(() => document.getElementById("successPopup").style.display = 'none', 3000);
         }
     </script>
-
 </body>
 </html>
