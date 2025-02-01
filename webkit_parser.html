@@ -9,7 +9,7 @@
         /* General page style */
         body {
             font-family: 'Anton', sans-serif;
-            background-color: #f4f7fc;
+            background-color: #111; /* Dark background to match the matrix theme */
             margin: 0;
             display: flex;
             justify-content: center;
@@ -18,12 +18,7 @@
             text-align: center;
             overflow: auto; /* Allow scrolling */
             transition: background-color 0.5s;
-        }
-
-        /* Dark Mode */
-        .dark-mode {
-            background-color: #333;
-            color: white;
+            position: relative; /* Necessary to position .content above the matrix */
         }
 
         /* Full screen spinner container */
@@ -59,14 +54,13 @@
 
         /* Container to center the form */
         .container {
-            background-color: white;
+            background-color: #222; /* Dark background */
             border-radius: 10px;
             padding: 40px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             width: 100%;
             max-width: 900px;
             box-sizing: border-box;
-            transition: background-color 0.3s;
             display: none; /* Hide until the page loads */
             opacity: 0; /* Set initial opacity to 0 */
             transition: opacity 1s ease-in-out; /* Add fade effect */
@@ -74,13 +68,8 @@
             overflow-y: auto;  /* Enable vertical scrolling */
         }
 
-        /* Dark Mode for Container */
-        .dark-mode .container {
-            background-color: #444;
-        }
-
         h2 {
-            color: #333;
+            color: #00FF00; /* Matrix green color */
             font-family: 'Bebas Neue', sans-serif;
             font-weight: 600;
             font-size: 36px;
@@ -88,16 +77,11 @@
             transition: color 0.3s;
         }
 
-        /* Dark Mode for h2 */
-        .dark-mode h2 {
-            color: white;
-        }
-
         textarea {
             width: 100%;
             padding: 12px;
             margin: 15px 0;
-            border: 1px solid #ccc;
+            border: 1px solid #00FF00; /* Matrix green border */
             border-radius: 8px;
             font-family: 'Impact', sans-serif;
             font-size: 16px;
@@ -105,19 +89,14 @@
             resize: vertical;
             box-sizing: border-box;
             transition: background-color 0.3s, color 0.3s;
-        }
-
-        /* Dark Mode for Textarea */
-        .dark-mode textarea {
-            background-color: #555;
-            color: white;
-            border-color: #777;
+            background-color: #333; /* Dark background */
+            color: #00FF00; /* Matrix green text color */
         }
 
         button {
             padding: 14px 28px;
-            background-color: #4CAF50;
-            color: white;
+            background-color: #00FF00; /* Matrix green button */
+            color: black;
             border: none;
             border-radius: 8px;
             cursor: pointer;
@@ -134,7 +113,7 @@
         .output {
             margin-top: 20px;
             padding: 15px;
-            background-color: #f1f1f1;
+            background-color: #222; /* Dark output box */
             border-radius: 8px;
             text-align: left;
             word-wrap: break-word;
@@ -144,13 +123,7 @@
             box-sizing: border-box;
             max-height: 300px;
             overflow-y: auto;
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        /* Dark Mode for Output */
-        .dark-mode .output {
-            background-color: #444;
-            color: white;
+            color: #00FF00; /* Matrix green text */
         }
 
         .copy-btn {
@@ -181,7 +154,7 @@
         .progress-bar {
             height: 20px;
             width: 0;
-            background-color: #4CAF50;
+            background-color: #00FF00; /* Matrix green progress bar */
             border-radius: 5px;
             transition: width 1s;
         }
@@ -192,8 +165,8 @@
             top: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background-color: #4CAF50;
-            color: white;
+            background-color: #00FF00;
+            color: black;
             padding: 10px 20px;
             border-radius: 8px;
             font-size: 16px;
@@ -229,17 +202,25 @@
             z-index: -1;
         }
 
-        .matrix-content {
-            position: relative;
-            z-index: 10;
+        .content {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 5; /* Ensure it's above the matrix */
             color: white;
-            font-family: Arial, sans-serif;
-            padding: 20px;
+            font-family: 'Bebas Neue', sans-serif;
+            text-align: center;
         }
 
     </style>
 </head>
 <body>
+    <div class="content">
+        <h1>Welcome to the Matrix</h1>
+        <p>This is some content in front of the Matrix animation.</p>
+    </div>
+
     <div class="spinner-container" id="spinnerContainer">
         <div class="spinner" id="loadingSpinner"></div>
     </div>
@@ -250,11 +231,6 @@
     <div class="container" id="contentContainer">
         <h2>Form Data Encoder</h2>
         <p>Please paste your raw form data (including boundaries) into the textarea below.</p>
-        
-        <!-- Dark Mode Toggle -->
-        <label for="darkModeToggle">Dark Mode:</label>
-        <input type="checkbox" id="darkModeToggle" onclick="toggleDarkMode()">
-        <br><br>
 
         <!-- Textarea for user input -->
         <textarea id="rawData" placeholder="Paste form data here..."></textarea>
@@ -281,12 +257,6 @@
     <div class="popup-message popup-copy" id="popupCopyMessage"></div>
 
     <script>
-        // Dark Mode Toggle Function
-        function toggleDarkMode() {
-            const body = document.body;
-            body.classList.toggle('dark-mode');
-        }
-
         // Matrix Animation Code
         const canvas = document.getElementById('matrix');
         const ctx = canvas.getContext('2d');
