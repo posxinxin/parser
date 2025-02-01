@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>WEBKIT CONVERTER</title>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Anton&family=Impact&display=swap" rel="stylesheet">
     <style>
@@ -182,13 +182,18 @@
             background-color: #2196F3;
         }
 
-        /* Add responsiveness for smaller screens */
+        /* Hide content for mobile */
         @media (max-width: 600px) {
             .container {
                 padding: 20px;
                 width: 90%;
                 max-height: 80vh;
                 overflow-y: auto;  /* Allow scrolling */
+            }
+
+            .content h1,
+            .content p {
+                display: none; /* Hide welcome message on mobile */
             }
         }
 
