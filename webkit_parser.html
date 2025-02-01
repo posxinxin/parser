@@ -3,434 +3,480 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form Data Parser</title>
+    <title>WEBKIT CONVERTER</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Anton&family=Impact&display=swap" rel="stylesheet">
     <style>
-        /* Styles for the page */
+        /* General page style */
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: #1c1c1c;
-            color: #fff;
+            font-family: 'Anton', sans-serif;
+            background-color: #f4f7fc;
             margin: 0;
-            padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            flex-direction: column;
-            position: relative;
-            overflow: auto;
-        }
-
-        h1 {
-            color: #00FF00; /* Green for uniformity */
             text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 20px;
+            overflow: auto; /* Allow scrolling */
+            transition: background-color 0.5s;
         }
 
-        label {
-            font-size: 1.2rem;
-            margin-bottom: 10px;
-            color: #ccc;
+        /* Dark Mode */
+        .dark-mode {
+            background-color: #333;
+            color: white;
+        }
+
+        /* Full screen spinner container */
+        .spinner-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10; /* Ensure it stays on top */
+            background-color: rgba(255, 255, 255, 0.7); /* Semi-transparent background */
+            opacity: 1; /* Ensure it's visible on page load */
+            transition: opacity 1s ease-out; /* Fade-out effect */
+        }
+
+        /* Spinner Style */
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4CAF50; /* Green spinner */
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Container to center the form */
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 900px;
+            box-sizing: border-box;
+            transition: background-color 0.3s;
+            display: none; /* Hide until the page loads */
+            opacity: 0; /* Set initial opacity to 0 */
+            transition: opacity 1s ease-in-out; /* Add fade effect */
+            max-height: 80vh;  /* Max height to allow scrolling */
+            overflow-y: auto;  /* Enable vertical scrolling */
+        }
+
+        /* Dark Mode for Container */
+        .dark-mode .container {
+            background-color: #444;
+        }
+
+        h2 {
+            color: #333;
+            font-family: 'Bebas Neue', sans-serif;
+            font-weight: 600;
+            font-size: 36px;
+            margin-bottom: 20px;
+            transition: color 0.3s;
+        }
+
+        /* Dark Mode for h2 */
+        .dark-mode h2 {
+            color: white;
         }
 
         textarea {
-            width: 90%;
-            max-width: 600px;
-            min-width: 600px;
-            height: 200px;
-            padding: 10px;
+            width: 100%;
+            padding: 12px;
+            margin: 15px 0;
+            border: 1px solid #ccc;
             border-radius: 8px;
-            border: 2px solid #ddd;
-            resize: none;
-            font-size: 1rem;
-            color: #fff;
-            background-color: #333;
-            position: relative;
-            animation: lightning-strike 1s infinite alternate;
-            display: block;
-            margin: 0 auto;
+            font-family: 'Impact', sans-serif;
+            font-size: 16px;
+            min-height: 150px;
+            resize: vertical;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s;
         }
 
-        /* New Content-Type box for x-www-form-urlencoded with glowing animation */
-        .content-type-box {
-            width: 90%;
-            max-width: 600px;
-            min-width: 600px;
-            padding: 10px;
-            border-radius: 8px;
-            border: 2px solid #ddd;
-            background-color: #333;
-            color: #fff;
-            font-family: 'Arial', sans-serif;
-            font-size: 1rem;
-            text-align: center;
-            margin-top: 20px;
-            display: block;
-            margin: 0 auto;
-            animation: glowingAnimation 1.5s infinite alternate;
+        /* Dark Mode for Textarea */
+        .dark-mode textarea {
+            background-color: #555;
+            color: white;
+            border-color: #777;
         }
 
-        .content-type-box p {
-            font-size: 1rem;
-            margin: 0;
-            padding: 10px;
-            background-color: #444;
-            border-radius: 5px;
-        }
-
-        input[type="submit"] {
-            background-color: #00FF00; /* Green for uniformity */
+        button {
+            padding: 14px 28px;
+            background-color: #4CAF50;
             color: white;
             border: none;
-            padding: 12px 20px;
-            font-size: 1.1rem;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s ease, transform 0.2s;
-            margin-top: 15px;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        input[type="submit"]:hover {
-            background-color: #45a049;
-            transform: scale(1.05);
-        }
-
-        .encoded-data {
-            background-color: #333;
-            border: 2px solid #00FF00; /* Green for uniformity */
-            padding: 20px;
-            margin-top: 30px;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 600px;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-            animation: lightning-strike 1s infinite alternate, popup 0.3s ease-out forwards;
-            color: #fff;
-            display: none;
-            text-align: center;
-        }
-
-        .encoded-data h2 {
-            color: #00FF00; /* Green for uniformity */
-            font-size: 1.8rem;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        pre {
-            background-color: #222;
-            padding: 15px;
             border-radius: 8px;
-            font-size: 1.1rem;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+            transform: scale(1.1); /* Hover effect */
+        }
+
+        .output {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f1f1f1;
+            border-radius: 8px;
+            text-align: left;
             word-wrap: break-word;
+            font-size: 14px;
             white-space: pre-wrap;
-            color: #fff;
-            text-align: center;
+            font-family: 'Impact', sans-serif;
+            box-sizing: border-box;
+            max-height: 300px;
+            overflow-y: auto;
+            transition: background-color 0.3s, color 0.3s;
         }
 
-        /* Glowing Animation (Uniform Green) */
-        @keyframes glowingAnimation {
-            0% {
-                box-shadow: 0 0 10px #00FF00, 0 0 20px #00FF00, 0 0 30px #00FF00;
-            }
-            50% {
-                box-shadow: 0 0 20px #00FF00, 0 0 40px #00FF00, 0 0 50px #00FF00;
-            }
-            100% {
-                box-shadow: 0 0 10px #00FF00, 0 0 20px #00FF00, 0 0 30px #00FF00;
-            }
-        }
-
-        /* Lightning Strike Animation (Uniform Green) */
-        @keyframes lightning-strike {
-            0% {
-                box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff;
-            }
-            25% {
-                box-shadow: 0 0 15px #00FF00, 0 0 30px #00FF00, 0 0 50px #00FF00;
-            }
-            50% {
-                box-shadow: 0 0 20px #00FF00, 0 0 40px #00FF00, 0 0 60px #00FF00;
-            }
-            75% {
-                box-shadow: 0 0 30px #00FF00, 0 0 50px #00FF00, 0 0 80px #00FF00;
-            }
-            100% {
-                box-shadow: 0 0 40px #fff, 0 0 70px #fff, 0 0 100px #fff;
-            }
-        }
-
-        /* Popup animation for encoded data */
-        @keyframes popup {
-            0% {
-                transform: scale(0.5);
-                opacity: 0;
-                box-shadow: 0 0 20px rgba(0, 255, 0, 0.7), 0 0 40px rgba(0, 255, 0, 0.7);
-            }
-            100% {
-                transform: scale(1);
-                opacity: 1;
-                box-shadow: 0 0 20px rgba(0, 255, 0, 0.7), 0 0 40px rgba(0, 255, 0, 0.7);
-            }
-        }
-
-        /* Error Popup */
-        .error-popup {
-            background-color: #FF4D4D;
+        /* Dark Mode for Output */
+        .dark-mode .output {
+            background-color: #444;
             color: white;
-            padding: 10px 20px;
-            border-radius: 10px;
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            max-width: 90%;
-            width: auto;
-            white-space: nowrap;
-            text-align: center;
-            font-size: 0.9rem;
-            display: none;
-            animation: popup 0.5s ease-out forwards;
         }
 
-        /* Success Popup */
-        .success-popup {
-            background-color: #00FF00;
+        .copy-btn {
+            padding: 10px 20px;
+            background-color: #333;
             color: white;
-            padding: 10px 20px;
-            border-radius: 10px;
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            max-width: 90%;
-            width: auto;
-            white-space: nowrap;
-            text-align: center;
-            font-size: 0.9rem;
-            display: none;
-            animation: popup 0.5s ease-out forwards;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 10px;
         }
 
-        /* Footer with animations */
-        .footer {
-            margin-top: 50px;
-            font-size: 1rem;
-            color: #777;
-            position: relative;
+        .copy-btn:hover {
+            background-color: #555;
+        }
+
+        /* Progress bar container */
+        .progress-container {
             width: 100%;
-            text-align: center;
-            overflow: hidden;
-            padding: 10px 0;
+            background-color: #f3f3f3;
+            border-radius: 5px;
+            margin-top: 20px;
+            display: none;
         }
 
-        .footer-content {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-        }
-
-        .created-by {
-            margin-bottom: 5px;
-            font-size: 1.5rem;
-            color: #00FF00; /* Green for uniformity */
-            animation: glowingText 2s infinite alternate;
-            font-weight: bold;
-        }
-
-        .moving-text {
-            position: absolute;
-            white-space: nowrap;
-            animation: moveText 20s linear infinite;
-            font-size: 1.5rem;
-            color: #00FF00; /* Green for uniformity */
-            font-weight: bold;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
-        }
-
-        @keyframes glowingText {
-            0% {
-                color: #00FF00;
-                text-shadow: 0 0 5px #00FF00, 0 0 10px #00FF00, 0 0 20px #00FF00;
-            }
-            25% {
-                color: #00FF00;
-                text-shadow: 0 0 5px #00FF00, 0 0 10px #00FF00, 0 0 20px #00FF00;
-            }
-            50% {
-                color: #00FF00;
-                text-shadow: 0 0 5px #00FF00, 0 0 10px #00FF00, 0 0 20px #00FF00;
-            }
-            75% {
-                color: #00FF00;
-                text-shadow: 0 0 5px #00FF00, 0 0 10px #00FF00, 0 0 20px #00FF00;
-            }
-            100% {
-                color: #00FF00;
-                text-shadow: 0 0 5px #00FF00, 0 0 10px #00FF00, 0 0 20px #00FF00;
-            }
-        }
-
-        @keyframes moveText {
-            0% {
-                left: 100%;
-            }
-            50% {
-                left: 50%;
-                transform: translateX(-50%);
-            }
-            100% {
-                left: -100%;
-            }
-        }
-
-        /* Animated Background (Bouncing Balls and Bubbles) */
-        @keyframes bounce {
-            0% { transform: translateY(0); }
-            50% { transform: translateY(-50px); }
-            100% { transform: translateY(0); }
-        }
-
-        @keyframes floatBubble {
-            0% { transform: translateY(100vh); opacity: 1; }
-            100% { transform: translateY(-10vh); opacity: 0; }
-        }
-
-        /* Create 100 bouncing balls and bubbles */
-        .bouncing-ball,
-        .bubble {
-            position: absolute;
-            border-radius: 50%;
-            opacity: 0.8;
-            animation-duration: 4s;
-            animation-timing-function: ease-in-out;
-            animation-iteration-count: infinite;
-        }
-
-        .bouncing-ball {
-            width: 30px;
-            height: 30px;
-            background-color: #00FF00; /* Green for uniformity */
-            animation-name: bounce;
-        }
-
-        .bubble {
-            width: 20px;
+        /* Progress bar */
+        .progress-bar {
             height: 20px;
-            background-color: rgba(0, 255, 0, 0.6); /* Green for uniformity */
-            animation-name: floatBubble;
+            width: 0;
+            background-color: #4CAF50;
+            border-radius: 5px;
+            transition: width 1s;
         }
 
-        /* Additional styles for bouncing balls and bubbles */
-        .bouncing-ball:nth-child(even) {
-            background-color: #00FF00;
+        /* Popup messages */
+        .popup-message {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            display: none;
+            transition: opacity 0.5s ease-out;
         }
 
-        .bubble:nth-child(odd) {
-            background-color: rgba(0, 255, 0, 0.6);
+        .popup-error {
+            background-color: #f44336;
         }
 
-        /* Media Queries for responsiveness */
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 2rem;
-            }
+        .popup-copy {
+            background-color: #2196F3;
+        }
 
-            textarea {
-                width: 95%;
-                height: 180px;
-            }
-
-            .footer-content {
-                font-size: 1rem;
-            }
-
-            .error-popup, .success-popup {
-                font-size: 0.9rem;
-            }
-
-            .content-type-box,
-            .encoded-data {
-                width: 95%;
-                max-width: none; /* Allow full width on smaller screens */
+        /* Add responsiveness for smaller screens */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+                width: 90%;
+                max-height: 80vh;
+                overflow-y: auto;  /* Allow scrolling */
             }
         }
 
-        @media (max-width: 480px) {
-            h1 {
-                font-size: 1.8rem;
-            }
-
-            textarea {
-                width: 95%;
-                height: 150px;
-            }
-
-            input[type="submit"] {
-                font-size: 1rem;
-            }
-
-            .footer {
-                font-size: 0.9rem;
-            }
-
-            .content-type-box,
-            .encoded-data {
-                width: 95%;
-            }
+        /* Matrix animation */
+        #matrix {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
         }
+
+        .matrix-content {
+            position: relative;
+            z-index: 10;
+            color: white;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
     </style>
 </head>
 <body>
-    <h1>Form Data Parser</h1>
-    <form id="form" onsubmit="return parseFormData(event)">
-        <label for="formData">Paste your raw form data:</label><br><br>
-        <textarea name="formData" id="formData" placeholder="Paste your raw form data here... (including boundaries)"></textarea><br><br>
-        <!-- New Content-Type box -->
-        <div class="content-type-box">
-            <label for="formData">Copy required Content-Type:</label><br><br>
-            <p>Content-Type: application/x-www-form-urlencoded</p>
-            <p>Content-Type: application/x-www-form-urlencoded; charset=UTF-8</p>
-        </div>
-        <input type="submit" value="Parse Data">
-    </form>
-    <div class="encoded-data" id="encodedData">
-        <h2>Encoded Form Data:</h2>
-        <pre id="encodedOutput"></pre>
+    <div class="spinner-container" id="spinnerContainer">
+        <div class="spinner" id="loadingSpinner"></div>
     </div>
-    <div class="error-popup" id="errorPopup">Invalid form data!</div>
-    <div class="success-popup" id="successPopup">Data parsed successfully!</div>
-    <div class="footer">
-        <div class="footer-content">
-            <span class="created-by">Created by: X I N</span>
+
+    <!-- Matrix Animation -->
+    <canvas id="matrix"></canvas>
+
+    <div class="container" id="contentContainer">
+        <h2>Form Data Encoder</h2>
+        <p>Please paste your raw form data (including boundaries) into the textarea below.</p>
+        
+        <!-- Dark Mode Toggle -->
+        <label for="darkModeToggle">Dark Mode:</label>
+        <input type="checkbox" id="darkModeToggle" onclick="toggleDarkMode()">
+        <br><br>
+
+        <!-- Textarea for user input -->
+        <textarea id="rawData" placeholder="Paste form data here..."></textarea>
+        <br>
+
+        <!-- Encode button with animation -->
+        <button onclick="processData()">Encode Form Data</button>
+
+        <!-- Progress bar -->
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-bar" id="progressBar"></div>
         </div>
+
+        <!-- Encoded data output -->
+        <div class="output" id="encodedData"></div>
+
+        <!-- Copy button -->
+        <button class="copy-btn" onclick="copyToClipboard()">Copy Encoded Data</button>
     </div>
-    <div class="footer">
-        <div class="footer-content">
-            <span class="moving-text">Telegram: https://t.me/posxinxin</span>
-        </div>
-    </div>
-    <div id="background-animations"></div>
+
+    <!-- Popup Messages -->
+    <div class="popup-message" id="popupMessage"></div>
+    <div class="popup-message popup-error" id="popupErrorMessage"></div>
+    <div class="popup-message popup-copy" id="popupCopyMessage"></div>
+
     <script>
-        function generateAnimations() {
-            const container = document.getElementById('background-animations');
-            for (let i = 0; i < 100; i++) {
-                const isBall = Math.random() < 0.5;
-                const element = document.createElement('div');
-                element.classList.add(isBall ? 'bouncing-ball' : 'bubble');
-                element.style.animationDuration = `${Math.random() * 2 + 3}s`;
-                element.style.left = `${Math.random() * 100}vw`;
-                element.style.animationDelay = `${Math.random() * 5}s`;
-                container.appendChild(element);
+        // Dark Mode Toggle Function
+        function toggleDarkMode() {
+            const body = document.body;
+            body.classList.toggle('dark-mode');
+        }
+
+        // Matrix Animation Code
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Japanese characters for Matrix effect
+        const characters = 'あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをん';
+        const characterArray = characters.split('');
+
+        const fontSize = 24;  // Larger font size for better visibility
+        const columns = canvas.width / fontSize;
+        const drops = [];
+
+        for (let i = 0; i < columns; i++) {
+            drops[i] = Math.floor(Math.random() * canvas.height);
+        }
+
+        function draw() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = 'green';
+            ctx.font = `${fontSize}px monospace`;
+
+            for (let i = 0; i < columns; i++) {
+                const character = characterArray[Math.floor(Math.random() * characterArray.length)];
+                ctx.fillText(character, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+
+                drops[i]++;
             }
         }
-        generateAnimations();
+
+        setInterval(draw, 40);
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            for (let i = 0; i < columns; i++) {
+                drops[i] = Math.floor(Math.random() * canvas.height);
+            }
+        });
+
+        // Parsing form data and encoding as URL
+        function parseFormData(data) {
+            const entries = {};
+            const cleanedData = data.replace(/--[\w\d-]+\s+/g, '').trim();
+            const lines = cleanedData.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+
+            let fieldName = '';
+            let fieldValue = '';
+            let isName = true;
+
+            lines.forEach(line => {
+                if (line.startsWith('Content-Disposition: form-data; name="')) {
+                    const match = line.match(/name="([^"]+)"/);
+                    if (match) {
+                        fieldName = match[1];
+                        isName = false;
+                    } else {
+                        isName = true;
+                    }
+                } else if (!isName) {
+                    fieldValue = line.trim();
+                    if (fieldName && fieldValue) {
+                        entries[fieldName] = fieldValue;
+                    }
+                    isName = true;
+                }
+            });
+
+            return entries;
+        }
+
+        function encodeFormData(data) {
+            return Object.entries(data)
+                .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+                .join('&');
+        }
+
+        function processData() {
+            const rawData = document.getElementById('rawData').value.trim();
+            const spinner = document.getElementById('loadingSpinner');
+            const progressBar = document.getElementById('progressBar');
+            const progressContainer = document.getElementById('progressContainer');
+
+            progressContainer.style.display = 'block';
+            progressBar.style.width = '50%';
+
+            setTimeout(() => {
+                if (rawData) {
+                    const formData = parseFormData(rawData);
+                    if (Object.keys(formData).length === 0) {
+                        showPopupError('Invalid data provided!');
+                        progressBar.style.width = '100%';
+                        setTimeout(() => {
+                            progressContainer.style.display = 'none';
+                        }, 1000);
+                        return;
+                    }
+
+                    const urlEncodedData = encodeFormData(formData);
+                    progressBar.style.width = '100%';
+                    document.getElementById('encodedData').textContent = `Encoded form data: \n${urlEncodedData}`;
+                    showPopup('Encoded Successfully!');
+
+                    setTimeout(() => {
+                        progressContainer.style.display = 'none';
+                    }, 1000);
+                } else {
+                    showPopupError('Invalid data provided!');
+                }
+            }, 2000);
+        }
+
+        function copyToClipboard() {
+            const encodedData = document.getElementById('encodedData').textContent;
+
+            if (encodedData) {
+                navigator.clipboard.writeText(encodedData).then(() => {
+                    showPopupCopy('Encoded data copied to clipboard!');
+                });
+            } else {
+                showPopupError('No data to copy!');
+            }
+        }
+
+        function showPopup(message) {
+            const popup = document.getElementById('popupMessage');
+            popup.textContent = message;
+            popup.style.display = 'block';
+            setTimeout(() => {
+                popup.style.opacity = 1;
+            }, 10);
+
+            setTimeout(() => {
+                popup.style.opacity = 0;
+                setTimeout(() => {
+                    popup.style.display = 'none';
+                }, 500);
+            }, 3000);
+        }
+
+        function showPopupError(message) {
+            const popup = document.getElementById('popupErrorMessage');
+            popup.textContent = message;
+            popup.style.display = 'block';
+            setTimeout(() => {
+                popup.style.opacity = 1;
+            }, 10);
+
+            setTimeout(() => {
+                popup.style.opacity = 0;
+                setTimeout(() => {
+                    popup.style.display = 'none';
+                }, 500);
+            }, 3000);
+        }
+
+        function showPopupCopy(message) {
+            const popup = document.getElementById('popupCopyMessage');
+            popup.textContent = message;
+            popup.style.display = 'block';
+            setTimeout(() => {
+                popup.style.opacity = 1;
+            }, 10);
+
+            setTimeout(() => {
+                popup.style.opacity = 0;
+                setTimeout(() => {
+                    popup.style.display = 'none';
+                }, 500);
+            }, 3000);
+        }
+
+        window.onload = function() {
+            setTimeout(() => {
+                document.getElementById('spinnerContainer').style.opacity = '0';
+                document.getElementById('spinnerContainer').style.display = 'none';
+
+                const contentContainer = document.getElementById('contentContainer');
+                contentContainer.style.display = 'block';
+                contentContainer.style.opacity = '1';
+            }, 2000);
+        };
     </script>
 </body>
 </html>
