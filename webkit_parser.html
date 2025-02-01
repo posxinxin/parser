@@ -18,7 +18,7 @@
             height: 100vh;
             flex-direction: column;
             position: relative;
-            overflow-y: auto; /* Allow vertical scrolling */
+            overflow: auto;
         }
 
         h1 {
@@ -112,8 +112,6 @@
             color: #fff;
             display: none;
             text-align: center;
-            max-height: 300px;  /* Limit height */
-            overflow-y: auto;   /* Allow scrolling */
         }
 
         .encoded-data h2 {
@@ -128,8 +126,8 @@
             padding: 15px;
             border-radius: 8px;
             font-size: 1.1rem;
-            word-wrap: break-word;   /* Allow wrapping of long words */
-            white-space: pre-wrap;   /* Preserve whitespace but allow wrapping */
+            word-wrap: break-word;
+            white-space: pre-wrap;
             color: #fff;
             text-align: center;
         }
@@ -292,6 +290,52 @@
             }
         }
 
+        /* Animated Background (Bouncing Balls and Bubbles) */
+        @keyframes bounce {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-50px); }
+            100% { transform: translateY(0); }
+        }
+
+        @keyframes floatBubble {
+            0% { transform: translateY(100vh); opacity: 1; }
+            100% { transform: translateY(-10vh); opacity: 0; }
+        }
+
+        /* Create 100 bouncing balls and bubbles */
+        .bouncing-ball,
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation-duration: 4s;
+            animation-timing-function: ease-in-out;
+            animation-iteration-count: infinite;
+        }
+
+        .bouncing-ball {
+            width: 30px;
+            height: 30px;
+            background-color: #00FF00; /* Green for uniformity */
+            animation-name: bounce;
+        }
+
+        .bubble {
+            width: 20px;
+            height: 20px;
+            background-color: rgba(0, 255, 0, 0.6); /* Green for uniformity */
+            animation-name: floatBubble;
+        }
+
+        /* Additional styles for bouncing balls and bubbles */
+        .bouncing-ball:nth-child(even) {
+            background-color: #00FF00;
+        }
+
+        .bubble:nth-child(odd) {
+            background-color: rgba(0, 255, 0, 0.6);
+        }
+
         /* Media Queries for responsiveness */
         @media (max-width: 768px) {
             h1 {
@@ -318,7 +362,7 @@
 
             textarea {
                 width: 95%;
-                height: 150px; /* Smaller height for small devices */
+                height: 150px;
             }
 
             input[type="submit"] {
@@ -327,11 +371,6 @@
 
             .footer {
                 font-size: 0.9rem;
-            }
-
-            .encoded-data {
-                width: 95%;
-                max-height: 250px;  /* Adjust height for small screens */
             }
         }
     </style>
@@ -423,36 +462,35 @@
                     const nameMatch = line.match(/name="([^"]+)"/);
                     if (nameMatch) {
                         fieldName = nameMatch[1];
-                        isName = true;
+                        isName = false;
                     }
-                } else if (isName) {
-                    fieldValue = line;
+                } else if (!isName) {
+                    fieldValue = line.trim();
                     entries[fieldName] = fieldValue;
-                    isName = false;
+                    isName = true;
                 }
             }
-
             return entries;
         }
 
         function encodeFormData(data) {
-            return Object.keys(data).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`).join('&');
+            const encodedData = [];
+            for (const key in data) {
+                if (data.hasOwnProperty(key)) {
+                    encodedData.push(encodeURIComponent(key) + '=' + encodeURIComponent(data[key]));
+                }
+            }
+            return encodedData.join('&');
         }
 
         function showErrorPopup() {
-            const errorPopup = document.getElementById("errorPopup");
-            errorPopup.style.display = "block";
-            setTimeout(() => {
-                errorPopup.style.display = "none";
-            }, 3000);
+            document.getElementById("errorPopup").style.display = 'block';
+            setTimeout(() => document.getElementById("errorPopup").style.display = 'none', 3000);
         }
 
         function showSuccessPopup() {
-            const successPopup = document.getElementById("successPopup");
-            successPopup.style.display = "block";
-            setTimeout(() => {
-                successPopup.style.display = "none";
-            }, 3000);
+            document.getElementById("successPopup").style.display = 'block';
+            setTimeout(() => document.getElementById("successPopup").style.display = 'none', 3000);
         }
     </script>
 </body>
