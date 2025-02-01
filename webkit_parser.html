@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Form Data Parser</title>
     <style>
-        /* Styles for the page */
         body {
             font-family: 'Arial', sans-serif;
             background-color: #1c1c1c;
@@ -17,9 +16,6 @@
             align-items: center;
             height: 100vh;
             flex-direction: column;
-            position: relative;
-            overflow: hidden;
-            box-sizing: border-box;
         }
 
         h1 {
@@ -47,21 +43,6 @@
             color: #fff;
             background-color: #333;
             margin: 0 auto;
-            animation: lightning-strike 1s infinite alternate;
-        }
-
-        .content-type-box {
-            width: 90%;
-            max-width: 600px;
-            padding: 10px;
-            border-radius: 8px;
-            background-color: #333;
-            color: #fff;
-            font-family: 'Arial', sans-serif;
-            font-size: 1rem;
-            text-align: center;
-            margin-top: 20px;
-            animation: glowingAnimation 1.5s infinite alternate;
         }
 
         input[type="submit"] {
@@ -73,18 +54,8 @@
             cursor: pointer;
             border-radius: 5px;
             margin-top: 15px;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-            transition: background-color 0.3s ease, transform 0.2s;
         }
 
-        input[type="submit"]:hover {
-            background-color: #45a049;
-            transform: scale(1.05);
-        }
-
-        /* Encoded Data Container */
         .encoded-data {
             background-color: #333;
             border: 2px solid #00FF00;
@@ -93,191 +64,15 @@
             border-radius: 10px;
             width: 90%;
             max-width: 600px;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-            color: #fff;
             display: none;
             text-align: center;
-            overflow: hidden; /* Ensure data stays inside the box */
-            word-wrap: break-word; /* Break long lines */
+            overflow: hidden;
         }
 
-        /* Glowing Animation */
-        @keyframes glowingAnimation {
-            0% {
-                box-shadow: 0 0 10px #00FF00, 0 0 20px #00FF00, 0 0 30px #00FF00;
-            }
-            50% {
-                box-shadow: 0 0 20px #00FF00, 0 0 40px #00FF00, 0 0 50px #00FF00;
-            }
-            100% {
-                box-shadow: 0 0 10px #00FF00, 0 0 20px #00FF00, 0 0 30px #00FF00;
-            }
-        }
-
-        /* Lightning Strike Animation */
-        @keyframes lightning-strike {
-            0% {
-                box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff;
-            }
-            25% {
-                box-shadow: 0 0 15px #00FF00, 0 0 30px #00FF00, 0 0 50px #00FF00;
-            }
-            50% {
-                box-shadow: 0 0 20px #00FF00, 0 0 40px #00FF00, 0 0 60px #00FF00;
-            }
-            75% {
-                box-shadow: 0 0 30px #00FF00, 0 0 50px #00FF00, 0 0 80px #00FF00;
-            }
-            100% {
-                box-shadow: 0 0 40px #fff, 0 0 70px #fff, 0 0 100px #fff;
-            }
-        }
-
-        /* Error Popup */
-        .error-popup {
-            background-color: #FF4D4D;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 10px;
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            max-width: 90%;
-            width: auto;
-            white-space: nowrap;
-            text-align: center;
-            font-size: 0.9rem;
-            display: none;
-            animation: popup 0.5s ease-out forwards;
-        }
-
-        /* Success Popup */
-        .success-popup {
-            background-color: #00FF00;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 10px;
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            max-width: 90%;
-            width: auto;
-            white-space: nowrap;
-            text-align: center;
-            font-size: 0.9rem;
-            display: none;
-            animation: popup 0.5s ease-out forwards;
-        }
-
-        /* Footer with animations */
         .footer {
             margin-top: 50px;
             font-size: 1rem;
             color: #777;
-            position: relative;
-            width: 100%;
-            text-align: center;
-            overflow: hidden;
-            padding: 10px 0;
-        }
-
-        .footer-content {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-        }
-
-        .created-by {
-            margin-bottom: 5px;
-            font-size: 1.5rem;
-            color: #00FF00;
-            animation: glowingText 2s infinite alternate;
-            font-weight: bold;
-        }
-
-        .moving-text {
-            position: absolute;
-            white-space: nowrap;
-            animation: moveText 20s linear infinite;
-            font-size: 1.5rem;
-            color: #00FF00;
-            font-weight: bold;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
-        }
-
-        @keyframes glowingText {
-            0% {
-                color: #00FF00;
-                text-shadow: 0 0 5px #00FF00, 0 0 10px #00FF00, 0 0 20px #00FF00;
-            }
-            100% {
-                color: #00FF00;
-                text-shadow: 0 0 5px #00FF00, 0 0 10px #00FF00, 0 0 20px #00FF00;
-            }
-        }
-
-        @keyframes moveText {
-            0% {
-                left: 100%;
-            }
-            50% {
-                left: 50%;
-                transform: translateX(-50%);
-            }
-            100% {
-                left: -100%;
-            }
-        }
-
-        /* Media Queries for responsiveness */
-        @media (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
-
-            h1 {
-                font-size: 2rem;
-            }
-
-            textarea {
-                width: 95%;
-                height: 150px;
-            }
-
-            input[type="submit"] {
-                font-size: 1rem;
-            }
-
-            .footer-content {
-                font-size: 1rem;
-            }
-
-            .error-popup, .success-popup {
-                font-size: 0.9rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            h1 {
-                font-size: 1.8rem;
-            }
-
-            textarea {
-                width: 95%;
-                height: 150px;
-            }
-
-            input[type="submit"] {
-                font-size: 1rem;
-            }
-
-            .footer {
-                font-size: 0.9rem;
-            }
         }
     </style>
 </head>
@@ -286,27 +81,15 @@
     <form id="form" onsubmit="return parseFormData(event)">
         <label for="formData">Paste your raw form data:</label><br><br>
         <textarea name="formData" id="formData" placeholder="Paste your raw form data here... (including boundaries)"></textarea><br><br>
-        <div class="content-type-box">
-            <label for="formData">Copy required Content-Type:</label><br><br>
-            <p>Content-Type: application/x-www-form-urlencoded</p>
-            <p>Content-Type: application/x-www-form-urlencoded; charset=UTF-8</p>
-        </div>
         <input type="submit" value="Parse Data">
     </form>
     <div class="encoded-data" id="encodedData">
         <h2>Encoded Form Data:</h2>
         <pre id="encodedOutput"></pre>
     </div>
-    <div class="error-popup" id="errorPopup">Invalid form data!</div>
-    <div class="success-popup" id="successPopup">Data parsed successfully!</div>
     <div class="footer">
         <div class="footer-content">
             <span class="created-by">Created by: X I N</span>
-        </div>
-    </div>
-    <div class="footer">
-        <div class="footer-content">
-            <span class="moving-text">Telegram: https://t.me/posxinxin</span>
         </div>
     </div>
 
@@ -316,48 +99,60 @@
 
             const rawData = document.getElementById("formData").value;
 
+            // Validate the raw data
             if (!isValidFormData(rawData)) {
-                showErrorPopup();
+                alert("Invalid form data! Please ensure the data is in proper format.");
                 return false;
             }
 
+            // Extract form data and encode it
             const parsedData = parseRawData(rawData);
-
             const urlEncodedData = encodeFormData(parsedData);
 
+            // Show the encoded data in the output box
             document.getElementById("encodedOutput").textContent = urlEncodedData;
             document.getElementById("encodedData").style.display = 'block';
-
-            showSuccessPopup();
         }
 
         function isValidFormData(data) {
-            const requiredPattern = /Content-Disposition: form-data; name="([^"]+)"/;
-            return requiredPattern.test(data);
+            return data.includes('Content-Disposition: form-data');
         }
 
         function parseRawData(data) {
             const entries = {};
-            const cleanedData = data.replace(/--[\w\d-]+\s+/g, '').trim();
-            const lines = cleanedData.split("\n").map(line => line.trim()).filter(line => line.length > 0);
+            const boundaryMatch = data.match(/boundary=(.*)/);
+            const boundary = boundaryMatch ? boundaryMatch[1] : null;
 
-            let fieldName = '';
-            let fieldValue = '';
-            let isName = true;
-
-            for (const line of lines) {
-                if (line.startsWith('Content-Disposition: form-data; name="')) {
-                    const nameMatch = line.match(/name="([^"]+)"/);
-                    if (nameMatch) {
-                        fieldName = nameMatch[1];
-                        isName = false;
-                    }
-                } else if (!isName) {
-                    fieldValue = line.trim();
-                    entries[fieldName] = fieldValue;
-                    isName = true;
-                }
+            if (!boundary) {
+                alert('No boundary found in the form data.');
+                return {};
             }
+
+            // Split the raw data using the boundary, remove extra parts
+            const parts = data.split(`--${boundary}`).filter(part => part.trim());
+
+            parts.forEach(part => {
+                const lines = part.split("\n").map(line => line.trim()).filter(line => line.length > 0);
+                let fieldName = '';
+                let fieldValue = '';
+
+                lines.forEach(line => {
+                    if (line.startsWith('Content-Disposition: form-data; name="')) {
+                        const nameMatch = line.match(/name="([^"]+)"/);
+                        if (nameMatch) {
+                            fieldName = nameMatch[1];
+                        }
+                    } else if (fieldName && !fieldValue) {
+                        // The first non-disposition line is the field value
+                        fieldValue = line;
+                    }
+                });
+
+                if (fieldName) {
+                    entries[fieldName] = fieldValue;
+                }
+            });
+
             return entries;
         }
 
@@ -369,16 +164,6 @@
                 }
             }
             return encodedData.join('&');
-        }
-
-        function showErrorPopup() {
-            document.getElementById("errorPopup").style.display = 'block';
-            setTimeout(() => document.getElementById("errorPopup").style.display = 'none', 3000);
-        }
-
-        function showSuccessPopup() {
-            document.getElementById("successPopup").style.display = 'block';
-            setTimeout(() => document.getElementById("successPopup").style.display = 'none', 3000);
         }
     </script>
 </body>
