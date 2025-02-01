@@ -14,15 +14,14 @@
             padding: 0;
             display: flex;
             justify-content: center;
-            align-items: center;
-            height: 100vh;
+            align-items: flex-start; /* Aligns items at the top */
             flex-direction: column;
-            position: relative;
-            overflow: auto;
+            min-height: 100vh; /* Ensures the body takes up at least the full viewport height */
+            overflow-y: auto; /* Allows scrolling */
         }
 
         h1 {
-            color: #00FF00; /* Green for uniformity */
+            color: #00FF00;
             text-align: center;
             font-size: 2.5rem;
             margin-bottom: 20px;
@@ -50,6 +49,7 @@
             animation: lightning-strike 1s infinite alternate;
             display: block;
             margin: 0 auto;
+            overflow-y: auto; /* Allow scrolling in the text area if the content is large */
         }
 
         /* New Content-Type box for x-www-form-urlencoded with glowing animation */
@@ -80,7 +80,7 @@
         }
 
         input[type="submit"] {
-            background-color: #00FF00; /* Green for uniformity */
+            background-color: #00FF00;
             color: white;
             border: none;
             padding: 12px 20px;
@@ -101,7 +101,7 @@
 
         .encoded-data {
             background-color: #333;
-            border: 2px solid #00FF00; /* Green for uniformity */
+            border: 2px solid #00FF00;
             padding: 20px;
             margin-top: 30px;
             border-radius: 10px;
@@ -112,10 +112,12 @@
             color: #fff;
             display: none;
             text-align: center;
+            max-height: 300px; /* Max height to avoid overflow */
+            overflow-y: auto; /* Allows vertical scrolling if the content is too large */
         }
 
         .encoded-data h2 {
-            color: #00FF00; /* Green for uniformity */
+            color: #00FF00;
             font-size: 1.8rem;
             margin-bottom: 15px;
             text-align: center;
@@ -239,7 +241,7 @@
         .created-by {
             margin-bottom: 5px;
             font-size: 1.5rem;
-            color: #00FF00; /* Green for uniformity */
+            color: #00FF00;
             animation: glowingText 2s infinite alternate;
             font-weight: bold;
         }
@@ -249,7 +251,7 @@
             white-space: nowrap;
             animation: moveText 20s linear infinite;
             font-size: 1.5rem;
-            color: #00FF00; /* Green for uniformity */
+            color: #00FF00;
             font-weight: bold;
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
         }
@@ -288,52 +290,6 @@
             100% {
                 left: -100%;
             }
-        }
-
-        /* Animated Background (Bouncing Balls and Bubbles) */
-        @keyframes bounce {
-            0% { transform: translateY(0); }
-            50% { transform: translateY(-50px); }
-            100% { transform: translateY(0); }
-        }
-
-        @keyframes floatBubble {
-            0% { transform: translateY(100vh); opacity: 1; }
-            100% { transform: translateY(-10vh); opacity: 0; }
-        }
-
-        /* Create 100 bouncing balls and bubbles */
-        .bouncing-ball,
-        .bubble {
-            position: absolute;
-            border-radius: 50%;
-            opacity: 0.8;
-            animation-duration: 4s;
-            animation-timing-function: ease-in-out;
-            animation-iteration-count: infinite;
-        }
-
-        .bouncing-ball {
-            width: 30px;
-            height: 30px;
-            background-color: #00FF00; /* Green for uniformity */
-            animation-name: bounce;
-        }
-
-        .bubble {
-            width: 20px;
-            height: 20px;
-            background-color: rgba(0, 255, 0, 0.6); /* Green for uniformity */
-            animation-name: floatBubble;
-        }
-
-        /* Additional styles for bouncing balls and bubbles */
-        .bouncing-ball:nth-child(even) {
-            background-color: #00FF00;
-        }
-
-        .bubble:nth-child(odd) {
-            background-color: rgba(0, 255, 0, 0.6);
         }
 
         /* Media Queries for responsiveness */
@@ -451,46 +407,49 @@
         function parseRawData(data) {
             const entries = {};
             const cleanedData = data.replace(/--[\w\d-]+\s+/g, '').trim();
-            const lines = cleanedData.split("\n").map(line => line.trim()).filter(line => line.length > 0);
+            const lines = cleanedData.split("\r\n");
 
-            let fieldName = '';
-            let fieldValue = '';
-            let isName = true;
-
-            for (const line of lines) {
-                if (line.startsWith('Content-Disposition: form-data; name="')) {
-                    const nameMatch = line.match(/name="([^"]+)"/);
-                    if (nameMatch) {
-                        fieldName = nameMatch[1];
-                        isName = false;
-                    }
-                } else if (!isName) {
-                    fieldValue = line.trim();
-                    entries[fieldName] = fieldValue;
-                    isName = true;
+            let currentName = '';
+            let currentValue = '';
+            lines.forEach(line => {
+                const nameMatch = /name="([^"]+)"/.exec(line);
+                if (nameMatch) {
+                    currentName = nameMatch[1];
+                } else if (line.trim() !== '') {
+                    currentValue += line + '\r\n';
                 }
-            }
+                if (line.trim() === '') {
+                    if (currentName) {
+                        entries[currentName] = currentValue.trim();
+                        currentName = '';
+                        currentValue = '';
+                    }
+                }
+            });
+
             return entries;
         }
 
         function encodeFormData(data) {
-            const encodedData = [];
-            for (const key in data) {
-                if (data.hasOwnProperty(key)) {
-                    encodedData.push(encodeURIComponent(key) + '=' + encodeURIComponent(data[key]));
-                }
-            }
-            return encodedData.join('&');
+            return Object.keys(data)
+                .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(data[key]))
+                .join('&');
         }
 
         function showErrorPopup() {
-            document.getElementById("errorPopup").style.display = 'block';
-            setTimeout(() => document.getElementById("errorPopup").style.display = 'none', 3000);
+            const errorPopup = document.getElementById('errorPopup');
+            errorPopup.style.display = 'block';
+            setTimeout(() => {
+                errorPopup.style.display = 'none';
+            }, 3000);
         }
 
         function showSuccessPopup() {
-            document.getElementById("successPopup").style.display = 'block';
-            setTimeout(() => document.getElementById("successPopup").style.display = 'none', 3000);
+            const successPopup = document.getElementById('successPopup');
+            successPopup.style.display = 'block';
+            setTimeout(() => {
+                successPopup.style.display = 'none';
+            }, 3000);
         }
     </script>
 </body>
