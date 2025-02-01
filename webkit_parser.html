@@ -18,8 +18,8 @@
             height: 100vh;
             flex-direction: column;
             position: relative;
-            overflow: hidden; /* Hide any overflow */
-            box-sizing: border-box; /* Prevents overflow due to padding/margins */
+            overflow: hidden;
+            box-sizing: border-box;
         }
 
         h1 {
@@ -84,6 +84,7 @@
             transform: scale(1.05);
         }
 
+        /* Encoded Data Container */
         .encoded-data {
             background-color: #333;
             border: 2px solid #00FF00;
@@ -96,9 +97,11 @@
             color: #fff;
             display: none;
             text-align: center;
+            overflow: hidden; /* Ensure data stays inside the box */
+            word-wrap: break-word; /* Break long lines */
         }
 
-        /* Glowing Animation (Uniform Green) */
+        /* Glowing Animation */
         @keyframes glowingAnimation {
             0% {
                 box-shadow: 0 0 10px #00FF00, 0 0 20px #00FF00, 0 0 30px #00FF00;
@@ -111,7 +114,7 @@
             }
         }
 
-        /* Lightning Strike Animation (Uniform Green) */
+        /* Lightning Strike Animation */
         @keyframes lightning-strike {
             0% {
                 box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff;
@@ -283,7 +286,6 @@
     <form id="form" onsubmit="return parseFormData(event)">
         <label for="formData">Paste your raw form data:</label><br><br>
         <textarea name="formData" id="formData" placeholder="Paste your raw form data here... (including boundaries)"></textarea><br><br>
-        <!-- New Content-Type box -->
         <div class="content-type-box">
             <label for="formData">Copy required Content-Type:</label><br><br>
             <p>Content-Type: application/x-www-form-urlencoded</p>
@@ -307,25 +309,8 @@
             <span class="moving-text">Telegram: https://t.me/posxinxin</span>
         </div>
     </div>
-    <div id="background-animations"></div>
-    <script>
-        function generateAnimations() {
-            const container = document.getElementById('background-animations');
-            for (let i = 0; i < 100; i++) {
-                const randomPositionX = Math.random() * window.innerWidth;
-                const randomPositionY = Math.random() * window.innerHeight;
-                const animationDelay = Math.random() * 3 + 's';
-                const isBall = Math.random() < 0.5;
-                const element = document.createElement('div');
-                element.classList.add(isBall ? 'bouncing-ball' : 'bubble');
-                element.style.left = randomPositionX + 'px';
-                element.style.top = randomPositionY + 'px';
-                element.style.animationDelay = animationDelay;
-                container.appendChild(element);
-            }
-        }
-        generateAnimations();
 
+    <script>
         function parseFormData(event) {
             event.preventDefault();
 
