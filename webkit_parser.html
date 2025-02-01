@@ -15,13 +15,14 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-direction: column;
             height: 100vh;
+            flex-direction: column;
+            position: relative;
             overflow: auto;
         }
 
         h1 {
-            color: #00FF00;
+            color: #00FF00; /* Green for uniformity */
             text-align: center;
             font-size: 2.5rem;
             margin-bottom: 20px;
@@ -36,6 +37,7 @@
         textarea {
             width: 90%;
             max-width: 600px;
+            min-width: 600px;
             height: 200px;
             padding: 10px;
             border-radius: 8px;
@@ -45,23 +47,28 @@
             color: #fff;
             background-color: #333;
             position: relative;
+            animation: lightning-strike 1s infinite alternate;
             display: block;
             margin: 0 auto;
         }
 
+        /* New Content-Type box for x-www-form-urlencoded with glowing animation */
         .content-type-box {
             width: 90%;
             max-width: 600px;
+            min-width: 600px;
             padding: 10px;
             border-radius: 8px;
             border: 2px solid #ddd;
             background-color: #333;
             color: #fff;
+            font-family: 'Arial', sans-serif;
             font-size: 1rem;
             text-align: center;
             margin-top: 20px;
             display: block;
             margin: 0 auto;
+            animation: glowingAnimation 1.5s infinite alternate;
         }
 
         .content-type-box p {
@@ -73,7 +80,7 @@
         }
 
         input[type="submit"] {
-            background-color: #00FF00;
+            background-color: #00FF00; /* Green for uniformity */
             color: white;
             border: none;
             padding: 12px 20px;
@@ -94,22 +101,24 @@
 
         .encoded-data {
             background-color: #333;
-            border: 2px solid #00FF00;
+            border: 2px solid #00FF00; /* Green for uniformity */
             padding: 20px;
             margin-top: 30px;
             border-radius: 10px;
             width: 90%;
             max-width: 600px;
             box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            animation: lightning-strike 1s infinite alternate, popup 0.3s ease-out forwards;
             color: #fff;
             display: none;
             text-align: center;
         }
 
         .encoded-data h2 {
-            color: #00FF00;
+            color: #00FF00; /* Green for uniformity */
             font-size: 1.8rem;
             margin-bottom: 15px;
+            text-align: center;
         }
 
         pre {
@@ -123,38 +132,100 @@
             text-align: center;
         }
 
-        .error-popup, .success-popup {
+        /* Glowing Animation (Uniform Green) */
+        @keyframes glowingAnimation {
+            0% {
+                box-shadow: 0 0 10px #00FF00, 0 0 20px #00FF00, 0 0 30px #00FF00;
+            }
+            50% {
+                box-shadow: 0 0 20px #00FF00, 0 0 40px #00FF00, 0 0 50px #00FF00;
+            }
+            100% {
+                box-shadow: 0 0 10px #00FF00, 0 0 20px #00FF00, 0 0 30px #00FF00;
+            }
+        }
+
+        /* Lightning Strike Animation (Uniform Green) */
+        @keyframes lightning-strike {
+            0% {
+                box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff;
+            }
+            25% {
+                box-shadow: 0 0 15px #00FF00, 0 0 30px #00FF00, 0 0 50px #00FF00;
+            }
+            50% {
+                box-shadow: 0 0 20px #00FF00, 0 0 40px #00FF00, 0 0 60px #00FF00;
+            }
+            75% {
+                box-shadow: 0 0 30px #00FF00, 0 0 50px #00FF00, 0 0 80px #00FF00;
+            }
+            100% {
+                box-shadow: 0 0 40px #fff, 0 0 70px #fff, 0 0 100px #fff;
+            }
+        }
+
+        /* Popup animation for encoded data */
+        @keyframes popup {
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+                box-shadow: 0 0 20px rgba(0, 255, 0, 0.7), 0 0 40px rgba(0, 255, 0, 0.7);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+                box-shadow: 0 0 20px rgba(0, 255, 0, 0.7), 0 0 40px rgba(0, 255, 0, 0.7);
+            }
+        }
+
+        /* Error Popup */
+        .error-popup {
+            background-color: #FF4D4D;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
             position: absolute;
             top: 20px;
             left: 50%;
             transform: translateX(-50%);
             max-width: 90%;
-            font-size: 0.9rem;
+            width: auto;
             white-space: nowrap;
             text-align: center;
-            padding: 10px 20px;
-            border-radius: 10px;
+            font-size: 0.9rem;
             display: none;
             animation: popup 0.5s ease-out forwards;
         }
 
-        .error-popup {
-            background-color: #FF4D4D;
-            color: white;
-        }
-
+        /* Success Popup */
         .success-popup {
             background-color: #00FF00;
             color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            max-width: 90%;
+            width: auto;
+            white-space: nowrap;
+            text-align: center;
+            font-size: 0.9rem;
+            display: none;
+            animation: popup 0.5s ease-out forwards;
         }
 
-        /* Footer styles */
+        /* Footer with animations */
         .footer {
             margin-top: 50px;
             font-size: 1rem;
             color: #777;
+            position: relative;
             width: 100%;
             text-align: center;
+            overflow: hidden;
+            padding: 10px 0;
         }
 
         .footer-content {
@@ -162,12 +233,14 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            position: relative;
         }
 
         .created-by {
             margin-bottom: 5px;
             font-size: 1.5rem;
-            color: #00FF00;
+            color: #00FF00; /* Green for uniformity */
+            animation: glowingText 2s infinite alternate;
             font-weight: bold;
         }
 
@@ -176,9 +249,32 @@
             white-space: nowrap;
             animation: moveText 20s linear infinite;
             font-size: 1.5rem;
-            color: #00FF00;
+            color: #00FF00; /* Green for uniformity */
             font-weight: bold;
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes glowingText {
+            0% {
+                color: #00FF00;
+                text-shadow: 0 0 5px #00FF00, 0 0 10px #00FF00, 0 0 20px #00FF00;
+            }
+            25% {
+                color: #00FF00;
+                text-shadow: 0 0 5px #00FF00, 0 0 10px #00FF00, 0 0 20px #00FF00;
+            }
+            50% {
+                color: #00FF00;
+                text-shadow: 0 0 5px #00FF00, 0 0 10px #00FF00, 0 0 20px #00FF00;
+            }
+            75% {
+                color: #00FF00;
+                text-shadow: 0 0 5px #00FF00, 0 0 10px #00FF00, 0 0 20px #00FF00;
+            }
+            100% {
+                color: #00FF00;
+                text-shadow: 0 0 5px #00FF00, 0 0 10px #00FF00, 0 0 20px #00FF00;
+            }
         }
 
         @keyframes moveText {
@@ -194,6 +290,52 @@
             }
         }
 
+        /* Animated Background (Bouncing Balls and Bubbles) */
+        @keyframes bounce {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-50px); }
+            100% { transform: translateY(0); }
+        }
+
+        @keyframes floatBubble {
+            0% { transform: translateY(100vh); opacity: 1; }
+            100% { transform: translateY(-10vh); opacity: 0; }
+        }
+
+        /* Create 100 bouncing balls and bubbles */
+        .bouncing-ball,
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation-duration: 4s;
+            animation-timing-function: ease-in-out;
+            animation-iteration-count: infinite;
+        }
+
+        .bouncing-ball {
+            width: 30px;
+            height: 30px;
+            background-color: #00FF00; /* Green for uniformity */
+            animation-name: bounce;
+        }
+
+        .bubble {
+            width: 20px;
+            height: 20px;
+            background-color: rgba(0, 255, 0, 0.6); /* Green for uniformity */
+            animation-name: floatBubble;
+        }
+
+        /* Additional styles for bouncing balls and bubbles */
+        .bouncing-ball:nth-child(even) {
+            background-color: #00FF00;
+        }
+
+        .bubble:nth-child(odd) {
+            background-color: rgba(0, 255, 0, 0.6);
+        }
+
         /* Media Queries for responsiveness */
         @media (max-width: 768px) {
             h1 {
@@ -202,6 +344,7 @@
 
             textarea {
                 width: 95%;
+                height: 180px;
             }
 
             .footer-content {
@@ -210,6 +353,12 @@
 
             .error-popup, .success-popup {
                 font-size: 0.9rem;
+            }
+
+            .content-type-box,
+            .encoded-data {
+                width: 95%;
+                max-width: none; /* Allow full width on smaller screens */
             }
         }
 
@@ -230,6 +379,11 @@
             .footer {
                 font-size: 0.9rem;
             }
+
+            .content-type-box,
+            .encoded-data {
+                width: 95%;
+            }
         }
     </style>
 </head>
@@ -238,6 +392,7 @@
     <form id="form" onsubmit="return parseFormData(event)">
         <label for="formData">Paste your raw form data:</label><br><br>
         <textarea name="formData" id="formData" placeholder="Paste your raw form data here... (including boundaries)"></textarea><br><br>
+        <!-- New Content-Type box -->
         <div class="content-type-box">
             <label for="formData">Copy required Content-Type:</label><br><br>
             <p>Content-Type: application/x-www-form-urlencoded</p>
@@ -262,94 +417,20 @@
         </div>
     </div>
     <div id="background-animations"></div>
-
     <script>
         function generateAnimations() {
             const container = document.getElementById('background-animations');
             for (let i = 0; i < 100; i++) {
-                const randomPositionX = Math.random() * window.innerWidth;
-                const randomPositionY = Math.random() * window.innerHeight;
-                const animationDelay = Math.random() * 3 + 's';
                 const isBall = Math.random() < 0.5;
                 const element = document.createElement('div');
                 element.classList.add(isBall ? 'bouncing-ball' : 'bubble');
-                element.style.left = randomPositionX + 'px';
-                element.style.top = randomPositionY + 'px';
-                element.style.animationDelay = animationDelay;
+                element.style.animationDuration = `${Math.random() * 2 + 3}s`;
+                element.style.left = `${Math.random() * 100}vw`;
+                element.style.animationDelay = `${Math.random() * 5}s`;
                 container.appendChild(element);
             }
         }
         generateAnimations();
-
-        function parseFormData(event) {
-            event.preventDefault();
-
-            const rawData = document.getElementById("formData").value;
-
-            if (!isValidFormData(rawData)) {
-                showErrorPopup();
-                return false;
-            }
-
-            const parsedData = parseRawData(rawData);
-
-            const urlEncodedData = encodeFormData(parsedData);
-
-            document.getElementById("encodedOutput").textContent = urlEncodedData;
-            document.getElementById("encodedData").style.display = 'block';
-
-            showSuccessPopup();
-        }
-
-        function isValidFormData(data) {
-            const requiredPattern = /Content-Disposition: form-data; name="([^"]+)"/;
-            return requiredPattern.test(data);
-        }
-
-        function parseRawData(data) {
-            const entries = {};
-            const cleanedData = data.replace(/--[\w\d-]+\s+/g, '').trim();
-            const lines = cleanedData.split("\n").map(line => line.trim()).filter(line => line.length > 0);
-
-            let fieldName = '';
-            let fieldValue = '';
-            let isName = true;
-
-            for (const line of lines) {
-                if (line.startsWith('Content-Disposition: form-data; name="')) {
-                    const nameMatch = line.match(/name="([^"]+)"/);
-                    if (nameMatch) {
-                        fieldName = nameMatch[1];
-                        isName = false;
-                    }
-                } else if (!isName) {
-                    fieldValue = line.trim();
-                    entries[fieldName] = fieldValue;
-                    isName = true;
-                }
-            }
-            return entries;
-        }
-
-        function encodeFormData(data) {
-            const encodedData = [];
-            for (const key in data) {
-                if (data.hasOwnProperty(key)) {
-                    encodedData.push(encodeURIComponent(key) + '=' + encodeURIComponent(data[key]));
-                }
-            }
-            return encodedData.join('&');
-        }
-
-        function showErrorPopup() {
-            document.getElementById("errorPopup").style.display = 'block';
-            setTimeout(() => document.getElementById("errorPopup").style.display = 'none', 3000);
-        }
-
-        function showSuccessPopup() {
-            document.getElementById("successPopup").style.display = 'block';
-            setTimeout(() => document.getElementById("successPopup").style.display = 'none', 3000);
-        }
     </script>
 </body>
 </html>
